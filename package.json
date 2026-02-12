@@ -1,0 +1,30 @@
+{
+  "name": "internship-management-app",
+  "version": "1.0.0",
+  "description": "A platform for managing internships, teams, tasks, resources, and assessments",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
+    "seed": "node seed.js"
+  },
+  "keywords": ["internship", "project-management", "mern"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express-validator": "^7.0.1",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.1"
+  }
+}

@@ -60,13 +60,37 @@ app.use((err, req, res, next) => {
 });
 
 // Serve Frontend in Production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+  console.log('Serving frontend in production mode...');
+  const buildPath = path.join(__dirname, 'client', 'build');
+  console.log('Static files path:', buildPath);
+  
+  app.use(express.static(buildPath));
+
+  // Debug route to check files
+  app.get('/api/debug-files', (req, res) => {
+    const fs = require('fs');
+    if (fs.existsSync(buildPath)) {
+      const files = fs.readdirSync(buildPath);
+      res.json({ buildPath, files });
+    } else {
+      res.status(404).json({ error: 'Build path not found', buildPath });
+    }
+  });
 
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    const indexPath = path.join(buildPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send('index.html not found in build directory. Check if build was successful.');
+    }
   });
+} else {
+  console.log(`Running in ${process.env.NODE_ENV || 'development'} mode`);
 }
+
+const fs = require('fs'); // Ensure fs is available if needed outside the block
 
 const PORT = process.env.PORT || 5000;
 
